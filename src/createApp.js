@@ -1,6 +1,15 @@
-import App from './App'
+import React from 'react'
+import { createBrowserHistory, createMemoryHistory } from 'history'
 
-export default () => App
-// receive {pathname}
-// maybe create Redux store and return a Component
-// but we don't need here
+import Root from './Root'
+
+export default ({ pathname } = {}) => {
+  const history = process.env.isSSR
+    ? createMemoryHistory({
+        initialEntries: [pathname],
+      })
+    : createBrowserHistory()
+
+  const App = () => <Root history={history} />
+  return App
+}

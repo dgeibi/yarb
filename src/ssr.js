@@ -4,6 +4,6 @@ import { renderToString } from 'react-dom/server'
 import createApp from './createApp'
 
 export default pathname => {
-  const App = createApp()
+  const App = createApp({ pathname })
   return renderStylesToString(renderToString(<App pathname={pathname} />))
 }

@@ -19,8 +19,13 @@ const outputPath = (config.output && config.output.path) || path.resolve('dist')
 
 const handlers = {
   dev() {
+    const convert = require('koa-connect')
+    const history = require('connect-history-api-fallback')
     return require('webpack-serve')({
       config,
+      add: app => {
+        app.use(convert(history()))
+      },
     })
   },
 

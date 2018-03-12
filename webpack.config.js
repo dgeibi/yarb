@@ -2,6 +2,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const PrerenderPlugin = require('simple-prerender-webpack-plugin')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const webpack = require('webpack')
 
 const getConfig = ({ command = 'build', isForPrerender } = {}) => {
   const isDev = command === 'dev'
@@ -28,6 +29,10 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
       },
     }),
 
+    output: {
+      publicPath: '/',
+    },
+
     mode,
     devtool: isDev ? 'cheap-module-source-map' : 'source-map',
 
@@ -43,6 +48,9 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
           config: getConfig({ command, isForPrerender: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
         }),
+      new webpack.DefinePlugin({
+        'process.env.isSSR': isForPrerender ? 'true' : 'false',
+      }),
     ].filter(Boolean),
 
     module: {
@@ -66,7 +74,12 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
           options: {
             cacheDirectory: true,
             babelrc: false,
-            plugins: ['react-hot-loader/babel', 'emotion'],
+            plugins: [
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-syntax-dynamic-import',
+              'react-hot-loader/babel',
+              'emotion',
+            ],
             presets: [
               [
                 '@babel/env',
