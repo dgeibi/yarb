@@ -1,0 +1,80 @@
+{
+  "name": "yarb",
+  "version": "1.0.0",
+  "private": true,
+  "description": "yet another react boilerplate...",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node util/cli.js dev",
+    "stage": "node util/cli.js stage",
+    "build": "node util/cli.js build",
+    "lint": "eslint .",
+    "precommit": "lint-staged",
+    "format": "prettier --ignore-path ./.gitignore --write \"**/*.js\""
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.40",
+    "@babel/preset-env": "^7.0.0-beta.40",
+    "@babel/preset-react": "^7.0.0-beta.40",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-loader": "^8.0.0-beta.2",
+    "css-loader": "^0.28.10",
+    "detect-port": "^1.2.2",
+    "eslint": "^4.18.2",
+    "eslint-config-dgeibi": "^4.1.0",
+    "finalhandler": "^1.1.1",
+    "html-webpack-plugin": "^3.0.6",
+    "husky": "^0.14.3",
+    "lint-staged": "^7.0.0",
+    "mini-css-extract-plugin": "^0.2.0",
+    "prettier": "^1.11.1",
+    "rimraf": "^2.6.2",
+    "serve-static": "^1.13.2",
+    "simple-prerender-webpack-plugin": "^3.0.1",
+    "style-loader": "^0.20.3",
+    "webpack": "^4.1.1",
+    "webpack-serve": "^0.2.0"
+  },
+  "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.40",
+    "babel-plugin-emotion": "^9.0.1",
+    "core-js": "^2.5.3",
+    "emotion": "^9.0.2",
+    "emotion-server": "^9.0.2",
+    "react": "^16.3.0-alpha.1",
+    "react-dom": "^16.3.0-alpha.1",
+    "react-emotion": "^9.0.2",
+    "react-hot-loader": "^4.0.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "prettier --write",
+      "git add"
+    ],
+    "*.md": [
+      "prettier --write",
+      "git add"
+    ],
+    ".*rc": [
+      "prettier --parser json --write",
+      "git add"
+    ]
+  },
+  "main": "webpack.config.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dgeibi/yarb.git"
+  },
+  "keywords": [
+    "webpack",
+    "react",
+    "emotion",
+    "boilerplate"
+  ],
+  "author": "dgeibi",
+  "bugs": {
+    "url": "https://github.com/dgeibi/yarb/issues"
+  },
+  "homepage": "https://github.com/dgeibi/yarb#readme"
+}
