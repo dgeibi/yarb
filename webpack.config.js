@@ -3,6 +3,7 @@ const PrerenderPlugin = require('simple-prerender-webpack-plugin')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
+const PreloadWebpackPlugin = require('preload-webpack-plugin')
 
 const define = (opts = {}) => {
   const keys = Object.keys(opts)
@@ -62,6 +63,11 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
           entry: path.join(__dirname, 'src/ssr.js'),
           config: getConfig({ command, isForPrerender: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
+          friends: [
+            new PreloadWebpackPlugin({
+              rel: 'prefetch',
+            }),
+          ],
         }),
       define({
         'process.env.isSSR': Boolean(isForPrerender),

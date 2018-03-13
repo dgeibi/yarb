@@ -31,10 +31,11 @@
     "koa-connect": "^2.0.1",
     "lint-staged": "^7.0.0",
     "mini-css-extract-plugin": "^0.2.0",
+    "preload-webpack-plugin": "^3.0.0-alpha.1",
     "prettier": "^1.11.1",
     "rimraf": "^2.6.2",
     "serve-static": "^1.13.2",
-    "simple-prerender-webpack-plugin": "^3.0.1",
+    "simple-prerender-webpack-plugin": "^3.1.0",
     "style-loader": "^0.20.3",
     "webpack": "^4.1.1",
     "webpack-serve": "^0.2.0"
