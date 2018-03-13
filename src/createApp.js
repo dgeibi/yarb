@@ -1,14 +1,14 @@
 import React from 'react'
-import { createBrowserHistory, createMemoryHistory } from 'history'
+import createHistory from './utils/createHistory'
 
 import Root from './layouts/Root'
 
 export default ({ pathname } = {}) => {
-  const history = process.env.isSSR
-    ? createMemoryHistory({
-        initialEntries: [pathname],
-      })
-    : createBrowserHistory()
+  const opts = {}
+  if (process.env.isSSR) {
+    opts.initialEntries = [pathname]
+  }
+  const history = createHistory(opts)
 
   const App = () => <Root history={history} />
   return App

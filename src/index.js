@@ -1,4 +1,4 @@
-import './polyfill'
+import './utils/polyfill'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import createApp from './createApp'
