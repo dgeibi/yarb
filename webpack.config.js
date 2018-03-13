@@ -4,6 +4,19 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 
+const define = (opts = {}) => {
+  const keys = Object.keys(opts)
+  if (keys.length < 1) return null
+
+  const definitions = {}
+  keys.forEach(key => {
+    const value = JSON.stringify(opts[key])
+    definitions[key] = value
+  })
+
+  return new webpack.DefinePlugin(definitions)
+}
+
 const getConfig = ({ command = 'build', isForPrerender } = {}) => {
   const isDev = command === 'dev'
   const isClientBuild = !isDev && !isForPrerender
@@ -13,6 +26,8 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
     template: './src/index.ejs',
     title: 'YARB',
   }
+
+  const routes = ['/', '/about/']
 
   if (!isForPrerender) {
     // set NODE_ENV for Node Runtime
@@ -43,13 +58,14 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
       isClientBuild && new MiniCssExtractPlugin(),
       isClientBuild &&
         new PrerenderPlugin({
-          routes: ['/', '/about/'],
+          routes,
           entry: path.join(__dirname, 'src/ssr.js'),
           config: getConfig({ command, isForPrerender: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
         }),
-      new webpack.DefinePlugin({
-        'process.env.isSSR': isForPrerender ? 'true' : 'false',
+      define({
+        'process.env.isSSR': Boolean(isForPrerender),
+        'process.env.routes': routes,
       }),
     ].filter(Boolean),
 

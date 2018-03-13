@@ -1,11 +1,16 @@
 import React from 'react'
 import { css } from 'emotion'
 import { Route } from 'react-router-dom'
-import Dynamic from '../components/Dynamic'
+import loadable from '../utils/loadable'
 
 import { LinkButton } from '../components/Button'
 
-const paths = ['/', '/about/']
+const pages = [
+  {
+    path: '/about/',
+    component: loadable(() => import('../pages/About')),
+  },
+]
 
 function Frame({ pathname }) {
   return (
@@ -28,16 +33,14 @@ function Frame({ pathname }) {
           }
         `}
       >
-        {paths.map(p => (
+        {process.env.routes.map(p => (
           <LinkButton to={p} key={p} disabled={p === pathname}>
             {p}
           </LinkButton>
         ))}
-
-        <Route
-          path="/about/"
-          render={() => <Dynamic import={() => import('../pages/About')} />}
-        />
+        {pages.map(({ path, component }) => (
+          <Route key={path} path={path} component={component} />
+        ))}
       </div>
     </div>
   )
