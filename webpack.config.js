@@ -20,6 +20,9 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
   }
 
   return {
+    ...(isDev && {
+      devtool: 'cheap-module-source-map',
+    }),
     ...(!isForPrerender && {
       optimization: {
         runtimeChunk: 'single',
@@ -29,13 +32,10 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
       },
     }),
 
+    mode,
     output: {
       publicPath: '/',
     },
-
-    mode,
-    devtool: isDev ? 'cheap-module-source-map' : 'source-map',
-
     entry: path.join(__dirname, 'src/index.js'),
 
     plugins: [
@@ -61,11 +61,27 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
         },
         isClientBuild && {
           test: /\.css$/,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+          use: [
+            MiniCssExtractPlugin.loader,
+            {
+              loader: 'css-loader',
+              options: {
+                minimize: true,
+              },
+            },
+          ],
         },
         isDev && {
           test: /\.css$/,
-          use: ['style-loader', 'css-loader'],
+          use: [
+            'style-loader',
+            {
+              loader: 'css-loader',
+              options: {
+                sourceMap: true,
+              },
+            },
+          ],
         },
         {
           test: /\.js$/,
@@ -78,7 +94,7 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
               '@babel/plugin-proposal-class-properties',
               '@babel/plugin-syntax-dynamic-import',
               'react-hot-loader/babel',
-              'emotion',
+              ['emotion', { sourceMap: isDev }],
             ],
             presets: [
               [
