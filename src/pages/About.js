@@ -1,6 +1,6 @@
 import React from 'react'
 import { css } from 'emotion'
-import Button from '../components/Button'
+import { LinkButton } from '../components/Button'
 
 export default function About() {
   return (
@@ -11,7 +11,9 @@ export default function About() {
         font-size: 4rem;
       `}
     >
-      <Button href="https://github.com/dgeibi/yarb">Fork Me on GitHub</Button>
+      <LinkButton href="https://github.com/dgeibi/yarb">
+        Fork Me on GitHub
+      </LinkButton>
     </div>
   )
 }

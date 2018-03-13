@@ -1,17 +1,12 @@
 import React from 'react'
 import { css } from 'emotion'
-import { Route, Link } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 import Dynamic from './components/Dynamic'
 
-import Button from './components/Button'
+import { LinkButton } from './components/Button'
 
 const paths = ['/', '/about/']
 
-const linkCSS = css`
-  &:focus {
-    outline: 0;
-  }
-`
 function Frame({ pathname }) {
   return (
     <div
@@ -34,9 +29,9 @@ function Frame({ pathname }) {
         `}
       >
         {paths.map(p => (
-          <Link to={p} key={p} disabled={p === pathname} css={linkCSS}>
-            <Button>{p}</Button>
-          </Link>
+          <LinkButton to={p} key={p} disabled={p === pathname}>
+            {p}
+          </LinkButton>
         ))}
 
         <Route

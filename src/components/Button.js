@@ -1,5 +1,6 @@
-import { css } from 'emotion'
+import { css, cx } from 'emotion'
 import React from 'react'
+import { Link } from 'react-router-dom'
 
 const style = css`
   display: inline-block;
@@ -9,48 +10,47 @@ const style = css`
   padding: 0.3em 0.4em;
   background-color: #fff;
   border-radius: 0.2em;
-  cursor: pointer;
-  text-decoration: none !important;
+  text-decoration: none;
   &:disabled,
-  &.disabled {
+  &[aria-disabled='true'] {
     color: #ddd;
-    cursor: not-allowed;
+    pointer-events: none;
   }
   & a {
     color: currentColor;
     text-decoration: none;
   }
-  &:focus:not(.disabled) {
+  &:focus {
     outline: 0;
+  }
+  &:focus:not([aria-disabled='true']) {
     color: red;
   }
 `
 
-export default function Button({ onClick, className, ...props }) {
-  if (typeof props.href === 'string') {
-    const disabledClass = props.disabled ? 'disabled' : ''
-    return (
-      <a
-        {...props}
-        onClick={e => {
-          if (typeof onClick === 'function') onClick(e)
-          if (props.disabled) {
-            e.preventDefault()
-            e.stopPropagation()
-          }
-        }}
-        css={style}
-        className={className ? `${className} ${disabledClass}` : disabledClass}
-      />
-    )
+export function LinkButton({ className, disabled, ...props }) {
+  const newProps = {
+    ...props,
+    className: cx(style, className),
+    ...(disabled && { tabIndex: -1, 'aria-disabled': 'true' }),
+  }
+  if (typeof props.to === 'string') {
+    return <Link {...newProps} />
   }
   return (
-    <button
-      css={style}
-      type="button"
-      className={className}
-      onClick={onClick}
-      {...props}
+    <a
+      {...newProps}
+      onClick={e => {
+        if (typeof props.onClick === 'function') props.onClick(e)
+        if (props.disabled) {
+          e.preventDefault()
+          e.stopPropagation()
+        }
+      }}
     />
   )
+}
+
+export default function Button(props) {
+  return <button type="button" css={style} {...props} />
 }
