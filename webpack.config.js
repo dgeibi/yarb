@@ -92,7 +92,7 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
                     : {
                         browsers: 'last 2 versions',
                       },
-                  useBuiltIns: 'usage',
+                  useBuiltIns: isForPrerender ? false : 'usage',
                   shippedProposals: true,
                 },
               ],
