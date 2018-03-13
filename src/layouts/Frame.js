@@ -1,9 +1,9 @@
 import React from 'react'
 import { css } from 'emotion'
 import { Route } from 'react-router-dom'
-import Dynamic from './components/Dynamic'
+import Dynamic from '../components/Dynamic'
 
-import { LinkButton } from './components/Button'
+import { LinkButton } from '../components/Button'
 
 const paths = ['/', '/about/']
 
@@ -36,7 +36,7 @@ function Frame({ pathname }) {
 
         <Route
           path="/about/"
-          render={() => <Dynamic import={() => import('./pages/About')} />}
+          render={() => <Dynamic import={() => import('../pages/About')} />}
         />
       </div>
     </div>

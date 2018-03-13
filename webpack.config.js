@@ -11,7 +11,7 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
 
   const htmlPluginOpts = {
     template: './src/index.ejs',
-    title: 'Prerender Demo',
+    title: 'YARB',
   }
 
   if (!isForPrerender) {

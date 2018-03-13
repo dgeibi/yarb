@@ -8,7 +8,4 @@ const App = createApp()
 const renderMethod =
   process.env.NODE_ENV === 'production' ? 'hydrate' : 'render'
 
-ReactDOM[renderMethod](
-  <App pathname={window.location.pathname} />,
-  document.getElementById('root')
-)
+ReactDOM[renderMethod](<App />, document.getElementById('root'))
