@@ -5,7 +5,7 @@ import Root from './layouts/Root'
 
 export default ({ pathname } = {}) => {
   const opts = {}
-  if (process.env.isSSR) {
+  if (process.env.isSSR || typeof document === 'undefined') {
     opts.initialEntries = [pathname]
   }
   const history = createHistory(opts)
