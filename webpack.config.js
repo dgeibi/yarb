@@ -18,10 +18,9 @@ const define = (opts = {}) => {
   return new webpack.DefinePlugin(definitions)
 }
 
-const getConfig = ({ command = 'build', isForPrerender } = {}) => {
-  const isDev = command === 'dev'
+const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
+  const isDev = mode === 'development'
   const isClientBuild = !isDev && !isForPrerender
-  const mode = isDev ? 'development' : 'production'
 
   const htmlPluginOpts = {
     template: './src/index.ejs',
@@ -61,7 +60,7 @@ const getConfig = ({ command = 'build', isForPrerender } = {}) => {
         new PrerenderPlugin({
           routes,
           entry: path.join(__dirname, 'src/ssr.js'),
-          config: getConfig({ command, isForPrerender: true }),
+          config: getConfig({ mode, isForPrerender: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
           friends: [
             new PreloadWebpackPlugin({

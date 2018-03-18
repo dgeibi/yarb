@@ -7,6 +7,7 @@
   "scripts": {
     "dev": "node util/cli.js dev",
     "stage": "node util/cli.js stage",
+    "start": "node util/cli.js serve",
     "build": "node util/cli.js build",
     "lint": "eslint .",
     "precommit": "lint-staged",
