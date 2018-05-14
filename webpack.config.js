@@ -4,6 +4,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 const PreloadWebpackPlugin = require('preload-webpack-plugin')
+const ManifestPlugin = require('webpack-manifest-plugin')
 
 const define = (opts = {}) => {
   const keys = Object.keys(opts)
@@ -54,6 +55,10 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
     entry: path.join(__dirname, 'src/index.js'),
 
     plugins: [
+      isClientBuild &&
+        new ManifestPlugin({
+          filter: c => c.isInitial,
+        }),
       isDev && new HtmlWebpackPlugin(htmlPluginOpts),
       isClientBuild && new MiniCssExtractPlugin(),
       isClientBuild &&
@@ -112,6 +117,7 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
             cacheDirectory: true,
             babelrc: false,
             plugins: [
+              '@babel/plugin-transform-proto-to-assign',
               '@babel/plugin-proposal-class-properties',
               '@babel/plugin-syntax-dynamic-import',
               'react-hot-loader/babel',
@@ -129,7 +135,7 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
                     : {
                         browsers: 'last 2 versions',
                       },
-                  useBuiltIns: isForPrerender ? false : 'usage',
+                  useBuiltIns: false,
                   shippedProposals: true,
                 },
               ],
