@@ -17,7 +17,6 @@
     "@babel/core": "^7.0.0-beta.46",
     "@babel/plugin-proposal-class-properties": "^7.0.0-beta.46",
     "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.46",
-    "@babel/plugin-transform-proto-to-assign": "^7.0.0-beta.46",
     "@babel/preset-env": "^7.0.0-beta.46",
     "@babel/preset-react": "^7.0.0-beta.46",
     "babel-core": "^7.0.0-bridge.0",
@@ -50,7 +49,6 @@
     "core-js": "^2.5.3",
     "emotion": "^9.1.3",
     "emotion-server": "^9.1.3",
-    "es6-shim": "^0.35.3",
     "history": "^4.7.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -58,7 +56,8 @@
     "react-hot-loader": "^4.1.3",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
-    "regenerator-runtime": "^0.11.1"
+    "regenerator-runtime": "^0.11.1",
+    "setprototypeof": "^1.1.0"
   },
   "lint-staged": {
     "*.js": [

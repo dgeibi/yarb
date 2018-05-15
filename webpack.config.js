@@ -110,38 +110,57 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
           ],
         },
         {
-          test: /\.js$/,
-          loader: 'babel-loader',
-          include: path.join(__dirname, 'src'),
-          options: {
-            cacheDirectory: true,
-            babelrc: false,
-            plugins: [
-              '@babel/plugin-transform-proto-to-assign',
-              '@babel/plugin-proposal-class-properties',
-              '@babel/plugin-syntax-dynamic-import',
-              'react-hot-loader/babel',
-              ['emotion', { sourceMap: isDev }],
-            ],
-            presets: [
-              [
-                '@babel/env',
-                {
-                  modules: false,
-                  targets: isForPrerender
-                    ? {
-                        node: 'current',
-                      }
-                    : {
-                        browsers: 'last 2 versions',
-                      },
-                  useBuiltIns: false,
-                  shippedProposals: true,
-                },
-              ],
-              '@babel/react',
-            ],
-          },
+          oneOf: [
+            {
+              test: /\.js$/,
+              loader: 'babel-loader',
+              include: path.join(__dirname, 'src'),
+              options: {
+                cacheDirectory: true,
+                babelrc: false,
+                plugins: [
+                  '@babel/plugin-proposal-class-properties',
+                  '@babel/plugin-syntax-dynamic-import',
+                  'react-hot-loader/babel',
+                  ['emotion', { sourceMap: isDev }],
+                ],
+                presets: [
+                  [
+                    '@babel/env',
+                    {
+                      modules: false,
+                      targets: isForPrerender
+                        ? {
+                            node: 'current',
+                          }
+                        : {
+                            browsers: 'last 2 versions',
+                          },
+                      useBuiltIns: isForPrerender ? false : 'usage',
+                      shippedProposals: true,
+                    },
+                  ],
+                  '@babel/react',
+                ],
+              },
+            },
+            {
+              test: /\.js$/,
+              loader: 'babel-loader',
+              options: {
+                cacheDirectory: true,
+                babelrc: false,
+                presets: [
+                  [
+                    '@babel/env',
+                    {
+                      modules: false,
+                    },
+                  ],
+                ],
+              },
+            },
+          ],
         },
       ].filter(Boolean),
     },
