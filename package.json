@@ -55,7 +55,7 @@
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "regenerator-runtime": "^0.11.1",
-    "setprototypeof": "^1.1.0"
+    "setprototypeof": "github:dgeibi/setprototypeof"
   },
   "lint-staged": {
     "*.js": [
