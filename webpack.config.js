@@ -119,16 +119,13 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
                 cacheDirectory: true,
                 babelrc: false,
                 plugins: [
-                  '@babel/plugin-proposal-class-properties',
-                  '@babel/plugin-syntax-dynamic-import',
                   'react-hot-loader/babel',
                   ['emotion', { sourceMap: isDev }],
                 ],
                 presets: [
                   [
-                    '@babel/env',
+                    'dgeibi-react',
                     {
-                      modules: false,
                       targets: isForPrerender
                         ? {
                             node: 'current',
@@ -137,10 +134,8 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
                             browsers: 'last 2 versions',
                           },
                       useBuiltIns: isForPrerender ? false : 'usage',
-                      shippedProposals: true,
                     },
                   ],
-                  '@babel/react',
                 ],
               },
             },

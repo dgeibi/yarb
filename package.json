@@ -15,12 +15,10 @@
   },
   "devDependencies": {
     "@babel/core": "^7.0.0-beta.46",
-    "@babel/plugin-proposal-class-properties": "^7.0.0-beta.46",
-    "@babel/plugin-syntax-dynamic-import": "^7.0.0-beta.46",
     "@babel/preset-env": "^7.0.0-beta.46",
-    "@babel/preset-react": "^7.0.0-beta.46",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.0.0-beta.2",
+    "babel-preset-dgeibi-react": "^1.0.4",
     "connect-history-api-fallback": "^1.5.0",
     "css-loader": "^0.28.11",
     "detect-port": "^1.2.2",
