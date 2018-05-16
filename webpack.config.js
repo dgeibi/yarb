@@ -4,7 +4,7 @@ const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
 const PreloadWebpackPlugin = require('preload-webpack-plugin')
-const ManifestPlugin = require('webpack-manifest-plugin')
+const HandleCSSLoader = require('webpack-handle-css-loader')
 
 const define = (opts = {}) => {
   const keys = Object.keys(opts)
@@ -23,12 +23,11 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
   const IS_DEV = env === 'development'
   const IS_PROD = env === 'production'
   const IS_PROD_CLIENT = IS_PROD && !IS_PRERENDER
-
+  const sourceMap = IS_DEV
   const htmlPluginOpts = {
     template: './src/index.ejs',
     title: 'YARB',
   }
-
   const routes = ['/', '/about/']
 
   return {
@@ -46,15 +45,17 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
     mode: IS_PROD ? 'production' : 'development',
     output: {
       publicPath: '/',
+      chunkFilename: IS_PROD_CLIENT ? '[id].[contenthash:8].js' : '[id].js',
+      filename: IS_PROD_CLIENT ? '[name].[contenthash:8].js' : '[name].js',
     },
     entry: path.join(__dirname, 'src/index.js'),
     plugins: [
-      IS_PROD_CLIENT &&
-        new ManifestPlugin({
-          filter: c => c.isInitial,
-        }),
       IS_DEV && new HtmlWebpackPlugin(htmlPluginOpts),
-      IS_PROD_CLIENT && new MiniCssExtractPlugin(),
+      IS_PROD_CLIENT &&
+        new MiniCssExtractPlugin({
+          filename: '[name].[contenthash:8].css',
+          chunkFilename: '[id].[contenthash:8].css',
+        }),
       IS_PROD_CLIENT &&
         new PrerenderPlugin({
           routes,
@@ -62,6 +63,10 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
           config: getConfig({ env, IS_PRERENDER: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
           friends: [
+            new PreloadWebpackPlugin({
+              rel: 'preload',
+              include: 'initial',
+            }),
             new PreloadWebpackPlugin({
               rel: 'prefetch',
             }),
@@ -79,30 +84,13 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
           test: /\.css$/,
           loader: 'css-loader/locals',
         },
-        IS_PROD_CLIENT && {
-          test: /\.css$/,
-          use: [
-            MiniCssExtractPlugin.loader,
-            {
-              loader: 'css-loader',
-              options: {
-                minimize: true,
-              },
-            },
-          ],
-        },
-        IS_DEV && {
-          test: /\.css$/,
-          use: [
-            'style-loader',
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: true,
-              },
-            },
-          ],
-        },
+        !IS_PRERENDER &&
+          new HandleCSSLoader({
+            minimize: IS_PROD,
+            extract: IS_PROD,
+            sourceMap,
+            cssModules: false,
+          }).css(),
         {
           oneOf: [
             {
@@ -112,10 +100,7 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
               options: {
                 cacheDirectory: true,
                 babelrc: false,
-                plugins: [
-                  'react-hot-loader/babel',
-                  ['emotion', { sourceMap: IS_DEV }],
-                ],
+                plugins: ['react-hot-loader/babel', ['emotion', { sourceMap }]],
                 presets: [
                   [
                     'dgeibi-react',
