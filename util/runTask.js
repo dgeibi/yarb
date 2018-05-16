@@ -7,24 +7,27 @@ function normalizeConfig(config, ...args) {
   return config
 }
 
-module.exports = async function run({
-  task,
-  host,
-  mode = 'production',
-  port = 8080,
-  configPath = path.resolve('webpack.config.js'),
-}) {
+const expected = ['dev', 'build', 'stage', 'serve']
+
+module.exports = async function run({ task, host, env, port, configPath }) {
+  if (!expected.includes(task)) {
+    console.error(`unexpected task "${task}"`)
+    process.exit(1)
+  }
+  if (env) {
+    process.env.NODE_ENV = env
+  }
   let webpackConfig
-  const configPathToDisplay = path.relative(process.cwd(), configPath)
+  const configFullPath = path.resolve(configPath)
+  const configPathToDisplay = path.relative(process.cwd(), configFullPath)
   try {
-    webpackConfig = require(configPath) // eslint-disable-line
+    webpackConfig = require(configFullPath) // eslint-disable-line
   } catch (e) {
     throw Error(`webpack config \`${configPathToDisplay}\` failed to load`)
   }
-  const env = {
-    mode,
-  }
-  const config = await normalizeConfig(webpackConfig, env)
+  const config = await normalizeConfig(webpackConfig, {
+    env,
+  })
   if (typeof config !== 'object' || config === null) {
     throw Error(
       `webpack config \`${configPathToDisplay}\` is not a right config`

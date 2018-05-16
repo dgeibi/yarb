@@ -19,9 +19,10 @@ const define = (opts = {}) => {
   return new webpack.DefinePlugin(definitions)
 }
 
-const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
-  const isDev = mode === 'development'
-  const isClientBuild = !isDev && !isForPrerender
+const getConfig = ({ env, IS_PRERENDER } = {}) => {
+  const IS_DEV = env === 'development'
+  const IS_PROD = env === 'production'
+  const IS_PROD_CLIENT = IS_PROD && !IS_PRERENDER
 
   const htmlPluginOpts = {
     template: './src/index.ejs',
@@ -30,16 +31,11 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
 
   const routes = ['/', '/about/']
 
-  if (!isForPrerender) {
-    // set NODE_ENV for Node Runtime
-    process.env.NODE_ENV = mode
-  }
-
   return {
-    ...(isDev && {
+    ...(IS_DEV && {
       devtool: 'cheap-module-source-map',
     }),
-    ...(!isForPrerender && {
+    ...(!IS_PRERENDER && {
       optimization: {
         runtimeChunk: 'single',
         splitChunks: {
@@ -47,25 +43,23 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
         },
       },
     }),
-
-    mode,
+    mode: IS_PROD ? 'production' : 'development',
     output: {
       publicPath: '/',
     },
     entry: path.join(__dirname, 'src/index.js'),
-
     plugins: [
-      isClientBuild &&
+      IS_PROD_CLIENT &&
         new ManifestPlugin({
           filter: c => c.isInitial,
         }),
-      isDev && new HtmlWebpackPlugin(htmlPluginOpts),
-      isClientBuild && new MiniCssExtractPlugin(),
-      isClientBuild &&
+      IS_DEV && new HtmlWebpackPlugin(htmlPluginOpts),
+      IS_PROD_CLIENT && new MiniCssExtractPlugin(),
+      IS_PROD_CLIENT &&
         new PrerenderPlugin({
           routes,
           entry: path.join(__dirname, 'src/ssr.js'),
-          config: getConfig({ mode, isForPrerender: true }),
+          config: getConfig({ env, IS_PRERENDER: true }),
           getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
           friends: [
             new PreloadWebpackPlugin({
@@ -74,18 +68,18 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
           ],
         }),
       define({
-        'process.env.isSSR': Boolean(isForPrerender),
+        'process.env.isSSR': Boolean(IS_PRERENDER),
         'process.env.routes': routes,
       }),
     ].filter(Boolean),
 
     module: {
       rules: [
-        isForPrerender && {
+        IS_PRERENDER && {
           test: /\.css$/,
           loader: 'css-loader/locals',
         },
-        isClientBuild && {
+        IS_PROD_CLIENT && {
           test: /\.css$/,
           use: [
             MiniCssExtractPlugin.loader,
@@ -97,7 +91,7 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
             },
           ],
         },
-        isDev && {
+        IS_DEV && {
           test: /\.css$/,
           use: [
             'style-loader',
@@ -120,20 +114,20 @@ const getConfig = ({ mode = 'production', isForPrerender } = {}) => {
                 babelrc: false,
                 plugins: [
                   'react-hot-loader/babel',
-                  ['emotion', { sourceMap: isDev }],
+                  ['emotion', { sourceMap: IS_DEV }],
                 ],
                 presets: [
                   [
                     'dgeibi-react',
                     {
-                      targets: isForPrerender
+                      targets: IS_PRERENDER
                         ? {
                             node: 'current',
                           }
                         : {
                             browsers: 'last 2 versions',
                           },
-                      useBuiltIns: isForPrerender ? false : 'usage',
+                      useBuiltIns: IS_PRERENDER ? false : 'usage',
                     },
                   ],
                 ],

@@ -1,18 +1,31 @@
+const commandLineArgs = require('command-line-args')
+
 const runTask = require('./runTask')
 
-const expected = ['build', 'dev', 'stage', 'serve']
-const [task = expected[0]] = process.argv.slice(2)
+const options = commandLineArgs([
+  { name: 'task', defaultOption: true, defaultValue: 'dev' },
+  {
+    name: 'env',
+    type: String,
+    defaultValue: process.env.NODE_ENV || 'development',
+  },
+  {
+    name: 'port',
+    type: Number,
+    defaultValue: process.env.PORT || 8080,
+  },
+  {
+    name: 'host',
+    type: String,
+    defaultValue: process.env.HOST || '0.0.0.0',
+  },
+  {
+    name: 'configPath',
+    type: String,
+    defaultValue: 'webpack.config.js',
+  },
+])
 
-if (!expected.includes(task)) {
-  console.error(Error(`unexpected task "${task}"`))
-  process.exit(1)
-}
-
-runTask({
-  task,
-  mode: task === 'dev' ? 'development' : 'production',
-  host: process.env.HOST || '0.0.0.0',
-  port: process.env.PORT || 8080,
-}).catch(err => {
+runTask(options).catch(err => {
   console.error(err)
 })
