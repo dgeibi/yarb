@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
   <title><%= htmlWebpackPlugin.options.title %></title>
 </head>
-<body><div id="root"><% if (htmlWebpackPlugin.options.content) { %><%=
-  htmlWebpackPlugin.options.content
+<body><div id="root"><% if (htmlWebpackPlugin.options.prerendered) { %><%=
+  htmlWebpackPlugin.options.prerendered
 %><% } %></div>
 </body>
 </html>

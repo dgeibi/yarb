@@ -1,8 +1,7 @@
 import { Router, Route } from 'react-router-dom'
 import React from 'react'
 import { hot } from 'react-hot-loader'
-
-import Frame from './Frame'
+import Frame from '../layouts/Frame'
 
 const Root = ({ history }) => (
   <Router history={history}>

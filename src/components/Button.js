@@ -40,6 +40,7 @@ export function LinkButton({ className, disabled, ...props }) {
   return (
     <a
       {...newProps}
+      href={props.href || 'javascript:void(0)'} // eslint-disable-line no-script-url
       onClick={e => {
         if (typeof props.onClick === 'function') props.onClick(e)
         if (props.disabled) {
@@ -51,6 +52,4 @@ export function LinkButton({ className, disabled, ...props }) {
   )
 }
 
-export default function Button(props) {
-  return <button type="button" css={style} {...props} />
-}
+export default LinkButton

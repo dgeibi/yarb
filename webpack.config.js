@@ -1,4 +1,3 @@
-const HtmlWebpackPlugin = require('html-webpack-plugin')
 const PrerenderPlugin = require('simple-prerender-webpack-plugin')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
@@ -23,7 +22,7 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
   const IS_DEV = env === 'development'
   const IS_PROD = env === 'production'
   const IS_PROD_CLIENT = IS_PROD && !IS_PRERENDER
-  const sourceMap = IS_DEV
+  const sourceMap = true
   const htmlPluginOpts = {
     template: './src/index.ejs',
     title: 'YARB',
@@ -31,37 +30,31 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
   const routes = ['/', '/about/']
 
   return {
-    ...(IS_DEV && {
-      devtool: 'cheap-module-source-map',
-    }),
-    ...(!IS_PRERENDER && {
-      optimization: {
-        runtimeChunk: 'single',
-        splitChunks: {
-          chunks: 'all',
-        },
+    devtool: IS_DEV ? 'cheap-module-source-map' : 'source-map',
+    optimization: {
+      runtimeChunk: 'single',
+      splitChunks: {
+        chunks: 'all',
       },
-    }),
+    },
     mode: IS_PROD ? 'production' : 'development',
     output: {
       publicPath: '/',
       chunkFilename: IS_PROD_CLIENT ? '[id].[contenthash:8].js' : '[id].js',
       filename: IS_PROD_CLIENT ? '[name].[contenthash:8].js' : '[name].js',
     },
-    entry: path.join(__dirname, 'src/index.js'),
+    entry: path.join(__dirname, 'src/entry.js'),
     plugins: [
-      IS_DEV && new HtmlWebpackPlugin(htmlPluginOpts),
       IS_PROD_CLIENT &&
         new MiniCssExtractPlugin({
           filename: '[name].[contenthash:8].css',
           chunkFilename: '[id].[contenthash:8].css',
         }),
-      IS_PROD_CLIENT &&
+      !IS_PRERENDER &&
         new PrerenderPlugin({
           routes,
-          entry: path.join(__dirname, 'src/ssr.js'),
           config: getConfig({ env, IS_PRERENDER: true }),
-          getHtmlWebpackPluginOpts: content => ({ ...htmlPluginOpts, content }),
+          customizeHtmlWebpackPluginOpts: htmlPluginOpts,
           friends: [
             new PreloadWebpackPlugin({
               rel: 'preload',
@@ -73,11 +66,9 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
           ],
         }),
       define({
-        'process.env.isSSR': Boolean(IS_PRERENDER),
         'process.env.routes': routes,
       }),
     ].filter(Boolean),
-
     module: {
       rules: [
         IS_PRERENDER && {
@@ -92,9 +83,9 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
             cssModules: false,
           }).css(),
         {
+          test: /\.js$/,
           oneOf: [
             {
-              test: /\.js$/,
               loader: 'babel-loader',
               include: path.join(__dirname, 'src'),
               options: {
@@ -103,7 +94,7 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
                 plugins: ['react-hot-loader/babel', ['emotion', { sourceMap }]],
                 presets: [
                   [
-                    'dgeibi-react',
+                    '@dgeibi/babel-preset-react-app',
                     {
                       targets: IS_PRERENDER
                         ? {
@@ -119,8 +110,8 @@ const getConfig = ({ env, IS_PRERENDER } = {}) => {
               },
             },
             {
-              test: /\.js$/,
               loader: 'babel-loader',
+              exclude: /node_modules[\\/]react(-dom)?[\\/]/,
               options: {
                 cacheDirectory: true,
                 babelrc: false,

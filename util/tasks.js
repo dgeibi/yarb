@@ -1,6 +1,7 @@
+const webpack = require('webpack')
+const fs = require('fs')
 const runWebpack = require('./runWebpack')
 const serveStatic = require('./serveStatic')
-const fs = require('fs')
 
 module.exports = ({ outputPath, host, port, config }) => {
   const tasks = {
@@ -20,15 +21,21 @@ module.exports = ({ outputPath, host, port, config }) => {
         }),
 
     dev() {
-      const convert = require('koa-connect')
-      const history = require('connect-history-api-fallback')
-      return require('webpack-serve')({
-        host,
-        config,
-        port,
-        add: app => {
-          app.use(convert(history()))
+      const WebpackDevServer = require('webpack-dev-server')
+      const serverConfig = {
+        stats: {
+          colors: true,
         },
+        hot: true,
+        port,
+        host,
+      }
+      config.plugins.push(new webpack.HotModuleReplacementPlugin())
+      WebpackDevServer.addDevServerEntrypoints(config, serverConfig)
+      const compiler = webpack(config)
+      const server = new WebpackDevServer(compiler, serverConfig)
+      server.listen(port, host, () => {
+        console.log(`serving at http://${host}:${port}`)
       })
     },
 

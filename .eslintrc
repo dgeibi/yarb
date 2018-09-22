@@ -1,6 +1,3 @@
 {
-  "extends": "dgeibi/react",
-  "rules": {
-    "import/first": "false"
-  }
+  "extends": "dgeibi/react"
 }
