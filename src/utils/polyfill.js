@@ -1,6 +1,11 @@
+import 'core-js/es6/symbol'
+import 'core-js/fn/array/from'
+import 'core-js/modules/es6.object.keys'
+import 'core-js/modules/es6.object.assign'
 import 'core-js/modules/es6.promise'
+import 'core-js/modules/es7.promise.finally'
 import 'core-js/modules/es6.set'
 import 'core-js/modules/es6.map'
-import 'core-js/modules/es6.weak-map' // ie 10
+import 'core-js/modules/es6.weak-map'
 import 'core-js/modules/web.dom.iterable'
-import 'regenerator-runtime/runtime'
+import 'whatwg-fetch'

@@ -59,13 +59,15 @@ module.exports = ({ env } = {}) => {
         options: {
           cacheDirectory: true,
           babelrc: false,
-          plugins: ['react-hot-loader/babel', ['emotion', { sourceMap }]],
+          plugins: [
+            !forNode && 'react-hot-loader/babel',
+            ['emotion', { sourceMap: IS_DEV }],
+          ].filter(x => x),
           presets: [
             [
               '@dgeibi/babel-preset-react-app',
               {
                 targets: target,
-                useBuiltIns: 'usage',
               },
             ],
           ],
@@ -80,10 +82,9 @@ module.exports = ({ env } = {}) => {
           babelrc: false,
           presets: [
             [
-              '@babel/preset-env',
+              '@dgeibi/babel-preset-react-app/dependencies',
               {
                 targets: target,
-                modules: false,
               },
             ],
           ],
@@ -122,6 +123,7 @@ module.exports = ({ env } = {}) => {
       ),
       new PrerenderPlugin({
         entry: './src/ssr.js',
+        writeToDisk: true,
       }),
       new PreloadWebpackPlugin({
         rel: 'preload',
