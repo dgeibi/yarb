@@ -36,7 +36,7 @@
     "prettier": "^1.14.3",
     "rimraf": "^2.6.2",
     "serve-static": "^1.13.2",
-    "simple-prerender-webpack-plugin": "^4.0.1",
+    "simple-prerender-webpack-plugin": "^6.0.3",
     "style-loader": "^0.23.0",
     "webpack": "^4.19.1",
     "webpack-dev-server": "^3.1.8",
