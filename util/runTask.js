@@ -23,7 +23,10 @@ module.exports = async function run({ task, host, env, port, configPath }) {
   try {
     webpackConfig = require(configFullPath) // eslint-disable-line
   } catch (e) {
-    throw Error(`webpack config \`${configPathToDisplay}\` failed to load`)
+    e.message = `webpack config \`${configPathToDisplay}\` failed to load\n${
+      e.message
+    }`
+    throw e
   }
   const config = await normalizeConfig(webpackConfig, {
     env,
