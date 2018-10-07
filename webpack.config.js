@@ -3,7 +3,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const webpack = require('webpack')
-const PreloadWebpackPlugin = require('preload-webpack-plugin')
 const HandleCSSLoader = require('webpack-handle-css-loader')
 
 const define = (opts = {}) => {
@@ -124,13 +123,6 @@ module.exports = ({ env } = {}) => {
       new PrerenderPlugin({
         entry: './src/ssr.js',
         writeToDisk: true,
-      }),
-      new PreloadWebpackPlugin({
-        rel: 'preload',
-        include: 'initial',
-      }),
-      new PreloadWebpackPlugin({
-        rel: 'prefetch',
       }),
       define({
         'process.env.routes': routes,
