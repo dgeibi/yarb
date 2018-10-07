@@ -15,7 +15,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.1.0",
-    "@dgeibi/babel-preset-react-app": "2.0.2",
+    "@dgeibi/babel-preset-react-app": "2.0.3",
     "autoprefixer": "^9.1.5",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "8.0.4",
@@ -37,7 +37,7 @@
     "serve-static": "^1.13.2",
     "simple-prerender-webpack-plugin": "^6.2.1",
     "style-loader": "^0.23.0",
-    "webpack": "^4.19.1",
+    "webpack": "^4.20.2",
     "webpack-dev-server": "^3.1.8",
     "webpack-handle-css-loader": "^3.0.1"
   },

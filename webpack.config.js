@@ -58,6 +58,8 @@ module.exports = ({ env } = {}) => {
         options: {
           cacheDirectory: true,
           babelrc: false,
+          configFile: false,
+          compact: true,
           plugins: [
             !forNode && 'react-hot-loader/babel',
             ['emotion', { sourceMap: IS_DEV }],
@@ -75,8 +77,10 @@ module.exports = ({ env } = {}) => {
       {
         ...(forNode && ssr),
         loader: 'babel-loader',
-        exclude: /node_modules[\\/]react(-dom)?[\\/]/,
+        exclude: /node_modules[\\/](?:react|react-dom)[\\/]|@babel[\\/]runtime/,
         options: {
+          configFile: false,
+          compact: true,
           cacheDirectory: true,
           babelrc: false,
           presets: [

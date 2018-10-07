@@ -6,7 +6,12 @@ const REJECTED = 2
 
 function FallbackLoading({ error }) {
   if (error) {
-    return <div>Error!</div>
+    return (
+      <div>
+        Error!
+        <pre>{error.stack}</pre>
+      </div>
+    )
   }
   return <div>Loading...</div>
 }
